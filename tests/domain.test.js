@@ -26,7 +26,7 @@ test('generates unique lessons and distributes topics across repeated sessions',
   const lessons = generateLessons('나눗셈', ['똑같이 나누기', '같은 수씩 묶기'], 6);
   assert.equal(lessons.length, 6);
   assert.equal(new Set(lessons.map(x => x.id)).size, 6);
-  assert.match(lessons[0].activity, /바둑돌 12개/);
+  assert.match(lessons[0].activity, /^- 구체물을 똑같이 나누기\n/);
   assert.match(lessons[1].title, /반복 연습/);
   assert.match(lessons[5].title, /같은 수씩 묶기/);
 });
@@ -72,4 +72,27 @@ test('unit options retain saved publisher-specific units and existing sample cat
   assert.equal(options.filter(x => x.source === 'example').length, 6);
   assert.equal(getUnitOptions(3, 1, '수학', '미래엔', state.plans).filter(x => x.source === 'saved').length, 0);
   assert.deepEqual(getUnitOptions(4, 1, '영어', '미래엔', []), []);
+});
+
+
+test('circle properties use the requested short title and three bullet activities', () => {
+  const [lesson] = generateLessons('원', ['반지름과 지름의 관계'], 1);
+  assert.equal(lesson.title, '원의 성질 알아보기');
+  assert.equal(lesson.activity, '- 원의 반지름과 지름 알아보기\n- 원의 반지름과 지름 사이의 관계 알아보기\n- 원의 성질 이야기하기');
+  assert.doesNotMatch(lesson.activity, /도입|활동 \(25분\)|정리 \(10분\)/);
+});
+
+test('custom topics and combined lessons also produce editable bullet outlines', () => {
+  for (const topics of [['문장의 짜임'], ['반지름 알아보기', '지름 알아보기'], []]) {
+    const [lesson] = generateLessons('우리 동네', topics, 1);
+    assert.ok(lesson.title);
+    assert.ok(lesson.activity.split('\n').every(line => line.startsWith('- ')));
+    assert.ok(lesson.activity.split('\n').length >= 3);
+  }
+});
+
+test('existing backup activity text is preserved without migration', () => {
+  const state = exampleState();
+  state.plans[0].lessons[0].activity = '도입 (5분): 기존 계획\n활동 (25분): 원 그리기';
+  assert.deepEqual(parseBackup(JSON.stringify(state)), state);
 });

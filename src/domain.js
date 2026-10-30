@@ -188,60 +188,59 @@ export function findExampleUnit(query, semester) {
       : H[Number(unitMatch[1]) - 1]
     : void 0;
 }
-export const TOPIC_ACTIVITIES = {
-  "똑같이 나누기":
-    "바둑돌 12개를 접시 3개에 한 개씩 번갈아 놓아 똑같이 나눕니다. 접시마다 4개씩 있는지 확인하고 12 ÷ 3 = 4로 나타냅니다. 8개를 2곳에, 15개를 3곳에 나누는 활동으로 연습합니다.",
-  "같은 수씩 묶기":
-    "바둑돌 12개를 3개씩 묶습니다. 묶음이 4개임을 세고 12 ÷ 3 = 4로 나타냅니다. 똑같이 나누는 상황과 비교하며 무엇의 개수를 구하는지 말합니다.",
-  "나눗셈식으로 나타내기":
-    "사탕 10개를 2명에게 똑같이 나누는 그림을 그립니다. 전체 수, 사람 수, 한 명이 받는 수를 연결하여 10 ÷ 2 = 5를 읽고 씁니다. 그림 카드 3장을 나눗셈식과 짝짓습니다.",
-  "곱셈과 나눗셈의 관계":
-    "3개씩 4묶음을 배열하여 3 × 4 = 12를 확인합니다. 같은 배열로 12 ÷ 3 = 4, 12 ÷ 4 = 3을 만들고 각 수가 뜻하는 것을 설명합니다.",
-  "곱셈구구로 몫 구하기":
-    "곱셈구구표에서 4 × □ = 20을 찾고 20 ÷ 4의 몫을 구합니다. 18 ÷ 3, 24 ÷ 6을 풀고 몫과 나누는 수를 곱해 확인합니다.",
-  "생활 속 나눗셈 문제":
-    "연필 18자루를 3명에게 똑같이 나누는 상황을 그림과 식으로 나타냅니다. 구할 것과 주어진 수에 표시하고 한 명당 6자루임을 단위와 함께 말합니다. 비슷한 문제를 학생이 만들어 봅니다.",
-  "원의 모양 찾기":
-    "동전, 컵의 입구, 삼각형과 사각형 그림을 비교합니다. 둥근 모양의 공통점을 찾고 종이에 원 모양 물건의 가장자리를 따라 그립니다.",
-  "원의 중심":
-    "종이 원을 반으로 접은 뒤 방향을 바꾸어 다시 반으로 접습니다. 두 접은 선이 만나는 점을 중심으로 표시하고 중심에서 원 위 여러 점까지의 거리를 비교합니다.",
-  "반지름 알아보기":
-    "원의 중심과 원 위 한 점을 선분으로 연결합니다. 서로 다른 방향의 반지름을 3개 그리고 자로 길이를 재어 같은 원의 반지름 길이가 같음을 확인합니다.",
-  "지름 알아보기":
-    "원 위의 두 점을 연결하되 중심을 지나는 선분을 그립니다. 중심을 지나지 않는 선분과 비교하여 지름을 찾고 길이를 측정합니다.",
-  "반지름과 지름의 관계":
-    "반지름이 3 cm인 원에 반지름 두 개를 이어 지름을 만듭니다. 지름은 6 cm임을 확인하고 반지름이 2 cm, 4 cm인 경우도 그림으로 비교합니다.",
-  "컴퍼스로 원 그리기":
-    "컴퍼스 바늘을 안전하게 고정하는 방법을 익힙니다. 자로 3 cm만큼 벌려 중심을 고정하고 원을 그립니다. 완성한 원에 중심·반지름·지름을 표시합니다.",
+// Short, editable lesson outlines. Persisted plans keep their original text.
+export const TOPIC_OUTLINES = {
+  "똑같이 나누기": { activities: ["구체물을 똑같이 나누기", "한 곳에 나누어 놓은 수 알아보기", "똑같이 나눈 결과 이야기하기"] },
+  "같은 수씩 묶기": { activities: ["구체물을 같은 수씩 묶기", "묶음의 수 알아보기", "똑같이 나누기와 같은 수씩 묶기 비교하기"] },
+  "나눗셈식으로 나타내기": { activities: ["그림에서 나누는 상황 알아보기", "나누는 상황을 나눗셈식으로 나타내기", "나눗셈식 읽고 각 수의 뜻 설명하기"] },
+  "곱셈과 나눗셈의 관계": { activities: ["배열을 곱셈식으로 나타내기", "같은 배열을 나눗셈식으로 나타내기", "곱셈과 나눗셈 사이의 관계 이야기하기"] },
+  "곱셈구구로 몫 구하기": { activities: ["나눗셈식과 관련된 곱셈구구 찾기", "곱셈구구를 이용하여 몫 구하기", "곱셈으로 나눗셈의 결과 확인하기"] },
+  "생활 속 나눗셈 문제": { activities: ["생활 속에서 나눗셈이 필요한 상황 찾기", "상황에 맞는 나눗셈식을 세워 문제 해결하기", "나눗셈 문제의 해결 과정 설명하기"] },
+  "원의 모양 찾기": { activities: ["생활 속에서 원 모양 찾기", "원과 다른 도형의 모양 비교하기", "원 모양의 특징 이야기하기"] },
+  "원의 중심": { activities: ["종이 원을 접어 중심 찾기", "원의 중심 표시하기", "원의 중심에서 원 위의 점까지 거리 비교하기"] },
+  "반지름 알아보기": { activities: ["원의 중심과 원 위의 점 연결하기", "원의 반지름 알아보기", "한 원에서 반지름의 길이 비교하기"] },
+  "지름 알아보기": { activities: ["원의 중심을 지나는 선분 그리기", "원의 지름 알아보기", "한 원에서 지름의 길이 비교하기"] },
+  "반지름과 지름의 관계": {
+    title: "원의 성질 알아보기",
+    activities: ["원의 반지름과 지름 알아보기", "원의 반지름과 지름 사이의 관계 알아보기", "원의 성질 이야기하기"],
+  },
+  "컴퍼스로 원 그리기": { activities: ["컴퍼스의 사용 방법 알아보기", "반지름의 길이를 정하여 원 그리기", "그린 원의 중심과 반지름 표시하기"] },
 };
+
+function learningGoal(topic) {
+  return /(?:하기|보기|찾기|읽기|쓰기|나누기|묶기|그리기|구하기|나타내기|비교)$/.test(topic)
+    ? topic
+    : `${topic} 알아보기`;
+}
+
 export function generateLessons(unit, topics, count) {
-  return Array.from(
-    {
-      length: count,
-    },
-    (r, H) => {
-      const D = Math.floor((H * topics.length) / count),
-        V = Math.max(D + 1, Math.floor(((H + 1) * topics.length) / count)),
-        q = topics.slice(D, V);
-      q.length || q.push(unit);
-      const x = q.join(" · "),
-        p = H > 0 && Math.floor(((H - 1) * topics.length) / count) === D,
-        B = q.map(
-          (j) =>
-            TOPIC_ACTIVITIES[j] ||
-            `${j}의 예시를 교사와 함께 살펴보고, 구체물·그림으로 표현합니다. 교사 시범 → 함께 풀기 → 스스로 풀기 순서로 기본 문제 3개를 해결합니다.`,
-        ).join(`
-`);
+  return Array.from({ length: count }, (_, index) => {
+    const start = Math.floor((index * topics.length) / count);
+    const end = Math.max(start + 1, Math.floor(((index + 1) * topics.length) / count));
+    const lessonTopics = topics.slice(start, end);
+    if (!lessonTopics.length) lessonTopics.push(unit);
+
+    const outlines = lessonTopics.map((topic) => {
+      const outline = TOPIC_OUTLINES[topic];
       return {
-        id: crypto.randomUUID(),
-        title: x + (p ? " (반복 연습)" : ""),
-        activity: `도입 (5분): ${x}에 대한 선수학습을 짧은 질문으로 확인합니다.
-활동 (25분): ${B} 어려워하면 수와 문장 난도를 낮추어 다시 연습합니다.
-정리 (10분): ${x}의 해결 과정을 자기 말로 설명하고, 확인 문제 2개를 풉니다.`,
-        check: `${x}의 기본 문제 2개 중 1개 이상을 스스로 해결하는지 확인하고, 필요한 도움을 기록합니다.`,
+        title: outline?.title || learningGoal(topic),
+        activities: outline?.activities || [
+          learningGoal(topic),
+          "관련 예시와 문제 해결하기",
+          "배운 내용 정리하고 설명하기",
+        ],
       };
-    },
-  );
+    });
+    const title = outlines.map((outline) => outline.title).join(" · ");
+    const repeated = index > 0 && Math.floor(((index - 1) * topics.length) / count) === start;
+    const activities = [...new Set(outlines.flatMap((outline) => outline.activities))];
+    return {
+      id: crypto.randomUUID(),
+      title: title + (repeated ? " (반복 연습)" : ""),
+      activity: activities.map((activity) => `- ${activity}`).join("\n"),
+      check: "학습 내용을 이해하고 스스로 설명하거나 문제를 해결하는지 확인하기",
+    };
+  });
 }
 export function getProgress(state) {
   const lessonIds = new Set(
