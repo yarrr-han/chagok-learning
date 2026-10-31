@@ -11,12 +11,18 @@
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --test --test-isolation=none tests/*.test.js",
-    "build:pages": "npm run build && node scripts/prepare-pages.mjs"
+    "build:pages": "npm run build && node scripts/prepare-pages.mjs",
+    "predev": "node scripts/prepare-reader.mjs",
+    "prebuild": "node scripts/prepare-reader.mjs"
   },
   "dependencies": {
+    "@tesseract.js-data/eng": "1.0.0",
+    "@tesseract.js-data/kor": "1.0.0",
+    "lucide-react": "0.546.0",
+    "pdfjs-dist": "6.4.299",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "lucide-react": "0.546.0"
+    "tesseract.js": "7.0.0"
   },
   "devDependencies": {
     "vite": "7.1.12"

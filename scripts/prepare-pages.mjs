@@ -8,6 +8,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const dist = join(root, 'dist');
 if (!existsSync(join(dist, 'index.html'))) throw new Error('Run npm run build first');
 cpSync(join(dist, 'assets'), join(root, 'assets'), { recursive: true });
+cpSync(join(dist, 'reader'), join(root, 'reader'), { recursive: true });
 cpSync(join(dist, 'index.html'), join(root, 'index.html'));
 cpSync(join(dist, '.nojekyll'), join(root, '.nojekyll'));
 console.log('Prepared root index.html and assets/ for branch-based GitHub Pages.');

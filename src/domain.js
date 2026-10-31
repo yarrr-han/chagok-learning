@@ -190,25 +190,97 @@ export function findExampleUnit(query, semester) {
 }
 // Short, editable lesson outlines. Persisted plans keep their original text.
 export const TOPIC_OUTLINES = {
-  "똑같이 나누기": { activities: ["구체물을 똑같이 나누기", "한 곳에 나누어 놓은 수 알아보기", "똑같이 나눈 결과 이야기하기"] },
-  "같은 수씩 묶기": { activities: ["구체물을 같은 수씩 묶기", "묶음의 수 알아보기", "똑같이 나누기와 같은 수씩 묶기 비교하기"] },
-  "나눗셈식으로 나타내기": { activities: ["그림에서 나누는 상황 알아보기", "나누는 상황을 나눗셈식으로 나타내기", "나눗셈식 읽고 각 수의 뜻 설명하기"] },
-  "곱셈과 나눗셈의 관계": { activities: ["배열을 곱셈식으로 나타내기", "같은 배열을 나눗셈식으로 나타내기", "곱셈과 나눗셈 사이의 관계 이야기하기"] },
-  "곱셈구구로 몫 구하기": { activities: ["나눗셈식과 관련된 곱셈구구 찾기", "곱셈구구를 이용하여 몫 구하기", "곱셈으로 나눗셈의 결과 확인하기"] },
-  "생활 속 나눗셈 문제": { activities: ["생활 속에서 나눗셈이 필요한 상황 찾기", "상황에 맞는 나눗셈식을 세워 문제 해결하기", "나눗셈 문제의 해결 과정 설명하기"] },
-  "원의 모양 찾기": { activities: ["생활 속에서 원 모양 찾기", "원과 다른 도형의 모양 비교하기", "원 모양의 특징 이야기하기"] },
-  "원의 중심": { activities: ["종이 원을 접어 중심 찾기", "원의 중심 표시하기", "원의 중심에서 원 위의 점까지 거리 비교하기"] },
-  "반지름 알아보기": { activities: ["원의 중심과 원 위의 점 연결하기", "원의 반지름 알아보기", "한 원에서 반지름의 길이 비교하기"] },
-  "지름 알아보기": { activities: ["원의 중심을 지나는 선분 그리기", "원의 지름 알아보기", "한 원에서 지름의 길이 비교하기"] },
+  "똑같이 나누기": {
+    activities: [
+      "구체물을 똑같이 나누기",
+      "한 곳에 나누어 놓은 수 알아보기",
+      "똑같이 나눈 결과 이야기하기",
+    ],
+  },
+  "같은 수씩 묶기": {
+    activities: [
+      "구체물을 같은 수씩 묶기",
+      "묶음의 수 알아보기",
+      "똑같이 나누기와 같은 수씩 묶기 비교하기",
+    ],
+  },
+  "나눗셈식으로 나타내기": {
+    activities: [
+      "그림에서 나누는 상황 알아보기",
+      "나누는 상황을 나눗셈식으로 나타내기",
+      "나눗셈식 읽고 각 수의 뜻 설명하기",
+    ],
+  },
+  "곱셈과 나눗셈의 관계": {
+    activities: [
+      "배열을 곱셈식으로 나타내기",
+      "같은 배열을 나눗셈식으로 나타내기",
+      "곱셈과 나눗셈 사이의 관계 이야기하기",
+    ],
+  },
+  "곱셈구구로 몫 구하기": {
+    activities: [
+      "나눗셈식과 관련된 곱셈구구 찾기",
+      "곱셈구구를 이용하여 몫 구하기",
+      "곱셈으로 나눗셈의 결과 확인하기",
+    ],
+  },
+  "생활 속 나눗셈 문제": {
+    activities: [
+      "생활 속에서 나눗셈이 필요한 상황 찾기",
+      "상황에 맞는 나눗셈식을 세워 문제 해결하기",
+      "나눗셈 문제의 해결 과정 설명하기",
+    ],
+  },
+  "원의 모양 찾기": {
+    activities: [
+      "생활 속에서 원 모양 찾기",
+      "원과 다른 도형의 모양 비교하기",
+      "원 모양의 특징 이야기하기",
+    ],
+  },
+  "원의 중심": {
+    activities: [
+      "종이 원을 접어 중심 찾기",
+      "원의 중심 표시하기",
+      "원의 중심에서 원 위의 점까지 거리 비교하기",
+    ],
+  },
+  "반지름 알아보기": {
+    activities: [
+      "원의 중심과 원 위의 점 연결하기",
+      "원의 반지름 알아보기",
+      "한 원에서 반지름의 길이 비교하기",
+    ],
+  },
+  "지름 알아보기": {
+    activities: [
+      "원의 중심을 지나는 선분 그리기",
+      "원의 지름 알아보기",
+      "한 원에서 지름의 길이 비교하기",
+    ],
+  },
   "반지름과 지름의 관계": {
     title: "원의 성질 알아보기",
-    activities: ["원의 반지름과 지름 알아보기", "원의 반지름과 지름 사이의 관계 알아보기", "원의 성질 이야기하기"],
+    activities: [
+      "원의 반지름과 지름 알아보기",
+      "원의 반지름과 지름 사이의 관계 알아보기",
+      "원의 성질 이야기하기",
+    ],
   },
-  "컴퍼스로 원 그리기": { activities: ["컴퍼스의 사용 방법 알아보기", "반지름의 길이를 정하여 원 그리기", "그린 원의 중심과 반지름 표시하기"] },
+  "컴퍼스로 원 그리기": {
+    activities: [
+      "컴퍼스의 사용 방법 알아보기",
+      "반지름의 길이를 정하여 원 그리기",
+      "그린 원의 중심과 반지름 표시하기",
+    ],
+  },
 };
 
 function learningGoal(topic) {
-  return /(?:하기|보기|찾기|읽기|쓰기|나누기|묶기|그리기|구하기|나타내기|비교)$/.test(topic)
+  return /(?:하기|보기|찾기|읽기|쓰기|나누기|묶기|그리기|구하기|나타내기|비교)$/.test(
+    topic,
+  )
     ? topic
     : `${topic} 알아보기`;
 }
@@ -216,7 +288,10 @@ function learningGoal(topic) {
 export function generateLessons(unit, topics, count) {
   return Array.from({ length: count }, (_, index) => {
     const start = Math.floor((index * topics.length) / count);
-    const end = Math.max(start + 1, Math.floor(((index + 1) * topics.length) / count));
+    const end = Math.max(
+      start + 1,
+      Math.floor(((index + 1) * topics.length) / count),
+    );
     const lessonTopics = topics.slice(start, end);
     if (!lessonTopics.length) lessonTopics.push(unit);
 
@@ -232,13 +307,17 @@ export function generateLessons(unit, topics, count) {
       };
     });
     const title = outlines.map((outline) => outline.title).join(" · ");
-    const repeated = index > 0 && Math.floor(((index - 1) * topics.length) / count) === start;
-    const activities = [...new Set(outlines.flatMap((outline) => outline.activities))];
+    const repeated =
+      index > 0 && Math.floor(((index - 1) * topics.length) / count) === start;
+    const activities = [
+      ...new Set(outlines.flatMap((outline) => outline.activities)),
+    ];
     return {
       id: crypto.randomUUID(),
       title: title + (repeated ? " (반복 연습)" : ""),
       activity: activities.map((activity) => `- ${activity}`).join("\n"),
-      check: "학습 내용을 이해하고 스스로 설명하거나 문제를 해결하는지 확인하기",
+      check:
+        "학습 내용을 이해하고 스스로 설명하거나 문제를 해결하는지 확인하기",
     };
   });
 }
@@ -348,7 +427,9 @@ export function parseBackup(text) {
         lessonIds.has(X.id) ||
         !isText(X.title) ||
         !isText(X.activity) ||
-        !isText(X.check)) &&
+        !isText(X.check) ||
+        (X.sourceLabel !== undefined &&
+          (!isText(X.sourceLabel) || X.sourceLabel.length > 100))) &&
         invalidBackup(),
         lessonIds.add(X.id));
   }
@@ -407,6 +488,7 @@ export function parseBackup(text) {
         title: X.title,
         activity: X.activity,
         check: X.check,
+        ...(X.sourceLabel ? { sourceLabel: X.sourceLabel } : {}),
       })),
     })),
     journals: data.journals.map((j) => ({

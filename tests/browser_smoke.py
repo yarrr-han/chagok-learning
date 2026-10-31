@@ -22,6 +22,7 @@ def stored(page):
 
 def create_plan(page):
     page.get_by_role('button', name='새 지도계획', exact=True).click()
+    page.get_by_role('tab', name='선택해서 만들기', exact=True).click()
     page.locator('select').nth(3).select_option(label='국정 교과서')
     page.locator('select').nth(4).select_option(label='1단원 · 덧셈과 뺄셈')
     page.get_by_role('button', name='계획 구성하기', exact=True).click()

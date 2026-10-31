@@ -37,6 +37,7 @@ import {
   loadState,
   downloadFile,
 } from "./domain.js";
+import LessonImport from "./components/LessonImport.jsx";
 import TextbookPicker from "./components/TextbookPicker.jsx";
 import Modal from "./components/Modal.jsx";
 import EmptyState from "./components/EmptyState.jsx";
@@ -68,7 +69,8 @@ function App() {
     [activePage, setActivePage] = React.useState("dashboard"),
     [toast, setToast] = React.useState(""),
     [storageError, setStorageError] = React.useState(false),
-    [planMode, setPlanMode] = React.useState("select"),
+    [planMode, setPlanMode] = React.useState("upload"),
+    [uploadDraft, setUploadDraft] = React.useState(null),
     [textbook, setTextbook] = React.useState(INITIAL_TEXTBOOK),
     [editingPlanId, setEditingPlanId] = React.useState(null),
     [backupError, setBackupError] = React.useState(""),
@@ -169,7 +171,8 @@ function App() {
     }, [toast]));
   function openNewPlan() {
     (setEditingPlanId(null),
-      setPlanMode("select"),
+      setPlanMode("upload"),
+      setUploadDraft(null),
       setDraftLessons([]),
       setPlanError(""),
       setUnitName(""),
@@ -623,7 +626,7 @@ function App() {
                 {activePage === "dashboard"
                   ? "계획부터 기록까지, 기초학력 지도를 한곳에서 관리해 보세요."
                   : activePage === "plans"
-                    ? "학년·출판사·단원을 선택하고, 차시별 목표와 활동을 준비해 보세요."
+                    ? "차시표 이미지·PDF로 차시별 목표와 활동을 준비해 보세요."
                     : activePage === "journals"
                       ? "계획을 바탕으로 실제 지도 내용과 학생의 변화를 남겨 보세요."
                       : "가능한 요일과 교시를 선택하면, 남은 수업을 달력에 배치해 드려요."}
@@ -662,7 +665,7 @@ function App() {
                     {" 수업 준비는 가볍게, 아이의 성장은 차곡차곡"}
                   </span>
                   <h2>
-                    {"학년과 단원을 선택하면,"}
+                    {"차시표를 올리면,"}
                     <br />
                     {"우리 반에 꼭 맞는 지도계획."}
                   </h2>
@@ -823,33 +826,33 @@ function App() {
                     <span className={"pill lavender"}>{"계획 도우미"}</span>
                   </div>
                   <p className={"section-description"}>
-                    {"학년과 교과서를 고르면 지도계획의 시작을 도와드려요."}
+                    {"차시가 적힌 캡처나 PDF로 지도계획의 시작을 도와드려요."}
                   </p>
                   <div className={"quick-selection-summary"}>
                     <span>
                       <small>{"STEP 1"}</small>
-                      <strong>{"학년 · 학기"}</strong>
+                      <strong>{"차시표 올리기"}</strong>
                     </span>
                     <ChevronRight size={16} />
                     <span>
                       <small>{"STEP 2"}</small>
-                      <strong>{"과목 · 출판사"}</strong>
+                      <strong>{"차시 확인"}</strong>
                     </span>
                     <ChevronRight size={16} />
                     <span>
                       <small>{"STEP 3"}</small>
-                      <strong>{"단원 선택"}</strong>
+                      <strong>{"계획 만들기"}</strong>
                     </span>
                   </div>
                   <p className={"quick-selection-hint"}>
-                    {"매번 입력할 필요 없이, 목록에서 골라 시작하세요."}
+                    {"파일에서 읽은 차시를 확인하고 필요한 수업만 골라 보세요."}
                   </p>
                   <button
                     className={"button primary full"}
                     onClick={openNewPlan}
                   >
                     <BookOpen size={16} />
-                    {" 학년·출판사·단원 선택"} <ArrowRight size={16} />
+                    {" 차시표 파일로 시작하기"} <ArrowRight size={16} />
                   </button>
                   <div className={"soft-tip"}>
                     <span>{"💡"}</span>
@@ -940,9 +943,7 @@ function App() {
                 ) : (
                   <EmptyState
                     title={"첫 배움의 계획을 세워 보세요"}
-                    text={
-                      "학년·출판사·단원을 선택하면 이곳에 지도계획이 차곡차곡 쌓여요."
-                    }
+                    text={"차시표에서 만든 지도계획이 이곳에 차곡차곡 쌓여요."}
                   />
                 )}
               </section>
@@ -1379,6 +1380,9 @@ function App() {
               </div>
               {draftLessons.map((o, _) => (
                 <div key={o.id} className={"lesson-editor"}>
+                  {o.sourceLabel && (
+                    <p className="fine-print">원문: {o.sourceLabel}</p>
+                  )}
                   <span className={"lesson-number"}>
                     {_ + 1}
                     {"차시"}
@@ -1467,9 +1471,7 @@ function App() {
           ) : (
             <React.Fragment>
               <p className={"modal-intro"}>
-                {
-                  "목록에서 우리 반 교과서를 고르고, 지도할 단원을 선택해 주세요."
-                }
+                {"차시표 이미지·PDF를 올리거나 기존 입력 방식을 선택해 주세요."}
               </p>
               <div
                 className={"plan-mode-tabs"}
@@ -1477,6 +1479,7 @@ function App() {
                 aria-label={"지도계획 입력 방식"}
               >
                 {[
+                  { id: "upload", label: "파일로 만들기" },
                   {
                     id: "select",
                     label: "선택해서 만들기",
@@ -1497,7 +1500,13 @@ function App() {
                       var C;
                       if (_.key === "ArrowLeft" || _.key === "ArrowRight") {
                         _.preventDefault();
-                        const J = o.id === "select" ? "manual" : "select";
+                        const modes = ["upload", "select", "manual"];
+                        const J =
+                          modes[
+                            (modes.indexOf(o.id) +
+                              (_.key === "ArrowRight" ? 1 : 2)) %
+                              modes.length
+                          ];
                         (changePlanMode(J),
                           (C = document.getElementById(`plan-tab-${J}`)) ==
                             null || C.focus());
@@ -1514,131 +1523,162 @@ function App() {
                   </button>
                 ))}
               </div>
-              <div
-                id={"plan-input-panel"}
-                role={"tabpanel"}
-                aria-labelledby={`plan-tab-${planMode}`}
-              >
-                {planMode === "select" ? (
-                  <TextbookPicker
-                    value={textbook}
-                    semester={semester}
-                    options={unitOptions}
-                    onChange={changeTextbook}
-                    onSemesterChange={changeSemester}
+              {planMode === "upload" ? (
+                <div
+                  id="plan-input-panel"
+                  role="tabpanel"
+                  aria-labelledby="plan-tab-upload"
+                >
+                  <LessonImport
+                    initialDraft={uploadDraft}
+                    onDraftChange={setUploadDraft}
+                    onBuild={({ unit, query, semester, lessons }) => {
+                      setUnitName(unit);
+                      setPlanQuery(query);
+                      setSemester(semester);
+                      setFocusTopics(
+                        lessons.map((lesson) => lesson.title).join(", "),
+                      );
+                      setDraftLessons(lessons);
+                      setPlanError("");
+                    }}
                   />
-                ) : (
-                  <React.Fragment>
+                </div>
+              ) : (
+                <>
+                  <div
+                    id={"plan-input-panel"}
+                    role={"tabpanel"}
+                    aria-labelledby={`plan-tab-${planMode}`}
+                  >
+                    {planMode === "select" ? (
+                      <TextbookPicker
+                        value={textbook}
+                        semester={semester}
+                        options={unitOptions}
+                        onChange={changeTextbook}
+                        onSemesterChange={changeSemester}
+                      />
+                    ) : (
+                      <React.Fragment>
+                        <label>
+                          {"학년 · 과목 · 단원"}
+                          <input
+                            value={planQuery}
+                            onChange={(o) => {
+                              (setPlanQuery(o.target.value),
+                                setFocusTopics(""),
+                                setUnitName(""));
+                            }}
+                            placeholder={"예: 3학년 수학 3단원"}
+                          />
+                        </label>
+                        <label>
+                          {"학기"}
+                          <select
+                            aria-label={"학기"}
+                            value={semester}
+                            onChange={(o) =>
+                              changeSemester(Number(o.target.value))
+                            }
+                          >
+                            <option value={1}>{"1학기"}</option>
+                            <option value={2}>{"2학기"}</option>
+                          </select>
+                        </label>
+                      </React.Fragment>
+                    )}
                     <label>
-                      {"학년 · 과목 · 단원"}
+                      {"지도 차시"}
                       <input
-                        value={planQuery}
-                        onChange={(o) => {
-                          (setPlanQuery(o.target.value),
-                            setFocusTopics(""),
-                            setUnitName(""));
-                        }}
-                        placeholder={"예: 3학년 수학 3단원"}
+                        type={"number"}
+                        min={1}
+                        max={30}
+                        value={lessonCount}
+                        onChange={(o) => setLessonCount(Number(o.target.value))}
                       />
                     </label>
-                    <label>
-                      {"학기"}
-                      <select
-                        aria-label={"학기"}
-                        value={semester}
-                        onChange={(o) => changeSemester(Number(o.target.value))}
-                      >
-                        <option value={1}>{"1학기"}</option>
-                        <option value={2}>{"2학기"}</option>
-                      </select>
-                    </label>
-                  </React.Fragment>
-                )}
-                <label>
-                  {"지도 차시"}
-                  <input
-                    type={"number"}
-                    min={1}
-                    max={30}
-                    value={lessonCount}
-                    onChange={(o) => setLessonCount(Number(o.target.value))}
-                  />
-                </label>
-                {exampleUnit ? (
-                  <div className={"unit-match"}>
-                    <CircleCheck size={20} />
-                    <div>
-                      <strong>
-                        {semester}
-                        {"학기 · "}
-                        {exampleUnit.unit}
-                      </strong>
-                      <p>{exampleUnit.topics.join(" · ")}</p>
-                      <small>
-                        {planMode === "select" &&
-                        (selectedUnit == null
-                          ? void 0
-                          : selectedUnit.source) === "saved"
-                          ? "선생님이 같은 교과서 조건으로 저장한 단원입니다."
-                          : "출판사별로 확인된 목차가 아닌 기본 예시입니다. 교과서와 일치하는지 확인해 주세요."}
-                      </small>
-                    </div>
-                  </div>
-                ) : planMode === "manual" || textbook.unitId === "custom" ? (
-                  <label>
-                    {"교과서 단원명"}
-                    <input
-                      value={unitName}
-                      onChange={(o) => setUnitName(o.target.value)}
-                      placeholder={"예: 문장의 짜임"}
-                    />
-                  </label>
-                ) : null}
-                {(exampleUnit ||
-                  planMode === "manual" ||
-                  textbook.unitId === "custom") && (
-                  <label>
-                    {"핵심 학습 내용"}{" "}
-                    {exampleUnit && (
-                      <small>
-                        {"선택 · 입력하면 기본 내용을 대신 사용해요"}
-                      </small>
+                    {exampleUnit ? (
+                      <div className={"unit-match"}>
+                        <CircleCheck size={20} />
+                        <div>
+                          <strong>
+                            {semester}
+                            {"학기 · "}
+                            {exampleUnit.unit}
+                          </strong>
+                          <p>{exampleUnit.topics.join(" · ")}</p>
+                          <small>
+                            {planMode === "select" &&
+                            (selectedUnit == null
+                              ? void 0
+                              : selectedUnit.source) === "saved"
+                              ? "선생님이 같은 교과서 조건으로 저장한 단원입니다."
+                              : "출판사별로 확인된 목차가 아닌 기본 예시입니다. 교과서와 일치하는지 확인해 주세요."}
+                          </small>
+                        </div>
+                      </div>
+                    ) : planMode === "manual" ||
+                      textbook.unitId === "custom" ? (
+                      <label>
+                        {"교과서 단원명"}
+                        <input
+                          value={unitName}
+                          onChange={(o) => setUnitName(o.target.value)}
+                          placeholder={"예: 문장의 짜임"}
+                        />
+                      </label>
+                    ) : null}
+                    {(exampleUnit ||
+                      planMode === "manual" ||
+                      textbook.unitId === "custom") && (
+                      <label>
+                        {"핵심 학습 내용"}{" "}
+                        {exampleUnit && (
+                          <small>
+                            {"선택 · 입력하면 기본 내용을 대신 사용해요"}
+                          </small>
+                        )}
+                        <textarea
+                          rows={3}
+                          value={focusTopics}
+                          onChange={(o) => setFocusTopics(o.target.value)}
+                          placeholder={
+                            exampleUnit
+                              ? "추가로 집중할 내용을 쉼표로 구분해 주세요."
+                              : "교과서의 핵심 내용을 쉼표로 구분해 주세요. 예: 주어 찾기, 서술어 찾기, 문장 완성하기"
+                          }
+                        />
+                      </label>
                     )}
-                    <textarea
-                      rows={3}
-                      value={focusTopics}
-                      onChange={(o) => setFocusTopics(o.target.value)}
-                      placeholder={
-                        exampleUnit
-                          ? "추가로 집중할 내용을 쉼표로 구분해 주세요."
-                          : "교과서의 핵심 내용을 쉼표로 구분해 주세요. 예: 주어 찾기, 서술어 찾기, 문장 완성하기"
-                      }
-                    />
-                  </label>
-                )}
-              </div>
-              <p className={"fine-print"}>
-                {
-                  "교사 검토용 기본 계획을 구성합니다. 교과서 원문 조회나 AI 생성 결과가 아닙니다."
-                }
-              </p>
-              {planError && (
-                <p className={"form-error"} role={"alert"}>
-                  {planError}
-                </p>
+                  </div>
+                  <p className={"fine-print"}>
+                    {
+                      "교사 검토용 기본 계획을 구성합니다. 교과서 원문 조회나 AI 생성 결과가 아닙니다."
+                    }
+                  </p>
+                  {planError && (
+                    <p className={"form-error"} role={"alert"}>
+                      {planError}
+                    </p>
+                  )}
+                  <div className={"modal-actions"}>
+                    <button
+                      className={"button outline"}
+                      onClick={() => setPlanModalOpen(false)}
+                    >
+                      {"취소"}
+                    </button>
+                    <button
+                      className={"button primary"}
+                      onClick={buildLessonDraft}
+                    >
+                      <Sparkles size={16} />
+                      {" 계획 구성하기"}
+                    </button>
+                  </div>
+                </>
               )}
-              <div className={"modal-actions"}>
-                <button
-                  className={"button outline"}
-                  onClick={() => setPlanModalOpen(false)}
-                >
-                  {"취소"}
-                </button>
-                <button className={"button primary"} onClick={buildLessonDraft}>
-                  <Sparkles size={16} />
-                  {" 계획 구성하기"}
-                </button>
-              </div>
             </React.Fragment>
           )}
         </Modal>
@@ -1684,6 +1724,9 @@ function App() {
                   {" 일지 작성"}
                 </button>
               </div>
+              {o.sourceLabel && (
+                <small className="fine-print">원문: {o.sourceLabel}</small>
+              )}
               <p>{o.activity}</p>
               <div className={"assessment"}>
                 <CircleCheck size={16} />
@@ -1866,7 +1909,7 @@ function App() {
               <strong>{"1. 지도계획"}</strong>
               <br />
               {
-                "학년·학기·과목·출판사를 고르고 단원을 선택하세요. 기본 예시는 3학년 수학을 제공합니다. 목록에 없는 단원은 한 번 등록하면 같은 교과서 조건에서 다시 선택할 수 있어요. 출판사별 목차를 자동 조회하지는 않습니다."
+                "새 지도계획에서 차시표 이미지나 PDF를 올리세요. 읽은 차시 번호·제목·순서를 확인하고 필요한 차시만 골라 계획을 만듭니다. 지도 내용이 없는 차시는 제목 기반 활동 초안이므로 검토해 주세요. 파일은 서버로 전송하지 않습니다. 기존 선택 방식과 직접 입력도 계속 사용할 수 있어요."
               }
             </p>
             <p>
