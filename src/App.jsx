@@ -38,7 +38,6 @@ import {
   downloadFile,
 } from "./domain.js";
 import LessonImport from "./components/LessonImport.jsx";
-import TextbookPicker from "./components/TextbookPicker.jsx";
 import Modal from "./components/Modal.jsx";
 import EmptyState from "./components/EmptyState.jsx";
 const NAV_ITEMS = [
@@ -1471,7 +1470,9 @@ function App() {
           ) : (
             <React.Fragment>
               <p className={"modal-intro"}>
-                {"차시표 이미지·PDF를 올리거나 기존 입력 방식을 선택해 주세요."}
+                {
+                  "차시표 이미지·PDF를 올리거나 지도할 내용을 직접 입력해 주세요."
+                }
               </p>
               <div
                 className={"plan-mode-tabs"}
@@ -1480,10 +1481,6 @@ function App() {
               >
                 {[
                   { id: "upload", label: "파일로 만들기" },
-                  {
-                    id: "select",
-                    label: "선택해서 만들기",
-                  },
                   {
                     id: "manual",
                     label: "직접 입력",
@@ -1500,11 +1497,11 @@ function App() {
                       var C;
                       if (_.key === "ArrowLeft" || _.key === "ArrowRight") {
                         _.preventDefault();
-                        const modes = ["upload", "select", "manual"];
+                        const modes = ["upload", "manual"];
                         const J =
                           modes[
                             (modes.indexOf(o.id) +
-                              (_.key === "ArrowRight" ? 1 : 2)) %
+                              (_.key === "ArrowRight" ? 1 : modes.length - 1)) %
                               modes.length
                           ];
                         (changePlanMode(J),
@@ -1514,12 +1511,7 @@ function App() {
                     }}
                     onClick={() => changePlanMode(o.id)}
                   >
-                    {o.id === "select" ? (
-                      <BookOpen size={16} />
-                    ) : (
-                      <Pencil size={16} />
-                    )}{" "}
-                    {o.label}
+                    <Pencil size={16} /> {o.label}
                   </button>
                 ))}
               </div>
@@ -1551,43 +1543,33 @@ function App() {
                     role={"tabpanel"}
                     aria-labelledby={`plan-tab-${planMode}`}
                   >
-                    {planMode === "select" ? (
-                      <TextbookPicker
-                        value={textbook}
-                        semester={semester}
-                        options={unitOptions}
-                        onChange={changeTextbook}
-                        onSemesterChange={changeSemester}
-                      />
-                    ) : (
-                      <React.Fragment>
-                        <label>
-                          {"학년 · 과목 · 단원"}
-                          <input
-                            value={planQuery}
-                            onChange={(o) => {
-                              (setPlanQuery(o.target.value),
-                                setFocusTopics(""),
-                                setUnitName(""));
-                            }}
-                            placeholder={"예: 3학년 수학 3단원"}
-                          />
-                        </label>
-                        <label>
-                          {"학기"}
-                          <select
-                            aria-label={"학기"}
-                            value={semester}
-                            onChange={(o) =>
-                              changeSemester(Number(o.target.value))
-                            }
-                          >
-                            <option value={1}>{"1학기"}</option>
-                            <option value={2}>{"2학기"}</option>
-                          </select>
-                        </label>
-                      </React.Fragment>
-                    )}
+                    <React.Fragment>
+                      <label>
+                        {"학년 · 과목 · 단원"}
+                        <input
+                          value={planQuery}
+                          onChange={(o) => {
+                            (setPlanQuery(o.target.value),
+                              setFocusTopics(""),
+                              setUnitName(""));
+                          }}
+                          placeholder={"예: 3학년 수학 3단원"}
+                        />
+                      </label>
+                      <label>
+                        {"학기"}
+                        <select
+                          aria-label={"학기"}
+                          value={semester}
+                          onChange={(o) =>
+                            changeSemester(Number(o.target.value))
+                          }
+                        >
+                          <option value={1}>{"1학기"}</option>
+                          <option value={2}>{"2학기"}</option>
+                        </select>
+                      </label>
+                    </React.Fragment>
                     <label>
                       {"지도 차시"}
                       <input
@@ -1909,7 +1891,7 @@ function App() {
               <strong>{"1. 지도계획"}</strong>
               <br />
               {
-                "새 지도계획에서 차시표 이미지나 PDF를 올리세요. 읽은 차시 번호·제목·순서를 확인하고 필요한 차시만 골라 계획을 만듭니다. 지도 내용이 없는 차시는 제목 기반 활동 초안이므로 검토해 주세요. 파일은 서버로 전송하지 않습니다. 기존 선택 방식과 직접 입력도 계속 사용할 수 있어요."
+                "새 지도계획에서 차시표 이미지나 PDF를 올리세요. 읽은 차시 번호·제목·순서를 확인하고 필요한 차시만 골라 계획을 만듭니다. 지도 내용이 없는 차시는 제목 기반 활동 초안이므로 검토해 주세요. 파일은 서버로 전송하지 않습니다. 파일 없이 직접 입력해서 만들 수도 있어요."
               }
             </p>
             <p>

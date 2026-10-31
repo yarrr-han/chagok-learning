@@ -22,9 +22,10 @@ def stored(page):
 
 def create_plan(page):
     page.get_by_role('button', name='새 지도계획', exact=True).click()
-    page.get_by_role('tab', name='선택해서 만들기', exact=True).click()
-    page.locator('select').nth(3).select_option(label='국정 교과서')
-    page.locator('select').nth(4).select_option(label='1단원 · 덧셈과 뺄셈')
+    assert [text.strip() for text in page.get_by_role('tab').all_text_contents()] == ['파일로 만들기', '직접 입력']
+    page.get_by_role('tab', name='파일로 만들기').press('ArrowLeft')
+    expect(page.get_by_role('tab', name='직접 입력')).to_be_focused()
+    page.get_by_label('학년 · 과목 · 단원', exact=True).fill('3학년 수학 1단원')
     page.get_by_role('button', name='계획 구성하기', exact=True).click()
     assert page.locator('.lesson-editor').count() == 6
     page.get_by_role('button', name='지도계획 저장', exact=True).click()

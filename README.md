@@ -25,7 +25,6 @@ npm run preview
 ## 수정할 파일
 
 - `src/App.jsx`: 대시보드, 지도계획, 지도일지, 달력 화면과 상태 관리
-- `src/components/TextbookPicker.jsx`: 학년·학기·과목·출판사·단원 선택
 - `src/components/Modal.jsx`, `EmptyState.jsx`: 공통 화면 요소
 - `src/domain.js`: 단원 예시, 차시 생성, 일정 배치, 진행률, 백업 검증, 저장 처리
 - `src/styles.css`: 기존 배포 CSS를 읽기 쉽게 정리한 스타일. 새 스타일도 여기서 수정할 수 있습니다.
